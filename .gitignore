@@ -1,0 +1,27 @@
+# Node modules
+node_modules/
+
+# Prisma generated files
+.prisma/
+.env
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode settings (optional if you use VSCode)
+.vscode/
+
+# Build output (if you ever build)
+dist/
+build/
+
+# Coverage (if you ever add testing)
+coverage/

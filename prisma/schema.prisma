@@ -1,0 +1,86 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  items Item[]
+}
+
+model Ingredient {
+  id    Int     @id @default(autoincrement())
+  name  String  @unique
+  price Float
+  itemIngredients ItemIngredient[]
+  orderItemIngredients OrderItemIngredient[]
+}
+
+model Item {
+  id    Int     @id @default(autoincrement())
+  name  String
+  price Float
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId Int?
+  itemIngredients ItemIngredient[]
+  menuItems MenuItem[]
+  orderItems OrderItem[]
+}
+
+model ItemIngredient {
+  id           Int       @id @default(autoincrement())
+  item         Item      @relation(fields: [itemId], references: [id])
+  itemId       Int
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+  ingredientId Int
+}
+
+model Menu {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  price     Float
+  menuItems MenuItem[]
+  orderItems OrderItem[]
+}
+
+model MenuItem {
+  id      Int   @id @default(autoincrement())
+  menu    Menu  @relation(fields: [menuId], references: [id])
+  menuId  Int
+  item    Item  @relation(fields: [itemId], references: [id])
+  itemId  Int
+}
+
+model Order {
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime      @default(now())
+  orderItems  OrderItem[]
+}
+
+model OrderItem {
+  id        Int      @id @default(autoincrement())
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  item      Item?    @relation(fields: [itemId], references: [id])
+  itemId    Int?
+  menu      Menu?    @relation(fields: [menuId], references: [id])
+  menuId    Int?
+  basePrice Float
+  customizations Json?
+  orderItemIngredients OrderItemIngredient[]
+}
+
+model OrderItemIngredient {
+  id             Int         @id @default(autoincrement())
+  orderItem      OrderItem   @relation(fields: [orderItemId], references: [id])
+  orderItemId    Int
+  ingredient     Ingredient? @relation(fields: [ingredientId], references: [id])
+  ingredientId   Int?
+  action         String
+  priceChange    Float
+}
