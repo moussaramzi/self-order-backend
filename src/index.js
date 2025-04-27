@@ -1,4 +1,5 @@
 import express from "express";
+import cors from 'cors';
 import bodyParser from "body-parser";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import itemRoutes from "./routes/itemRoutes.js";
@@ -9,7 +10,11 @@ import orderRoutes from './routes/orderRoutes.js';
 import { swaggerDocs, swaggerUi } from "./swagger.js";
 
 const app = express();
-
+app.use(cors({
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+  }));
 // Middleware
 app.use(bodyParser.json());
 

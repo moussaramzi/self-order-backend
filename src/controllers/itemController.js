@@ -14,11 +14,68 @@ const prisma = new PrismaClient();
  */
 export const getItems = async (req, res) => {
   try {
+    const categoryId = req.query.categoryId ? parseInt(req.query.categoryId) : null;
+    
+    // Filter items by categoryId if provided
     const items = await prisma.item.findMany({
-      include: { category: true, itemIngredients: true },
+      where: categoryId ? {
+        categoryId: categoryId
+      } : {},
+      include: { 
+        category: true, 
+        itemIngredients: {
+          include: {
+            ingredient: true
+          }
+        }
+      },
     });
+    
     res.status(200).json(items);
   } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+/**
+ * @swagger
+ * /items/{id}/ingredients:
+ *   get:
+ *     summary: Get ingredients for a specific item
+ *     description: Fetch all ingredients associated with a specific item
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the item
+ *         schema:
+ *           type: integer
+ *     responses:
+ *       200:
+ *         description: A list of ingredients
+ *       404:
+ *         description: Item not found
+ *       500:
+ *         description: Internal server error
+ */
+export const getItemIngredients = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const itemIngredients = await prisma.itemIngredient.findMany({
+      where: { itemId: parseInt(id, 10) },
+      include: { ingredient: true },
+    });
+
+    if (!itemIngredients || itemIngredients.length === 0) {
+      return res.status(404).json({ error: "No ingredients found for this item." });
+    }
+
+    // Return only the ingredients
+    const ingredients = itemIngredients.map((ii) => ii.ingredient);
+    res.status(200).json(ingredients);
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 };
