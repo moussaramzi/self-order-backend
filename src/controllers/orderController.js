@@ -1,6 +1,5 @@
-// src/controllers/orderController.js
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import * as orderFacade from "../facade.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 /**
  * @swagger
@@ -26,21 +25,11 @@ const prisma = new PrismaClient();
  *       500:
  *         description: Internal server error
  */
-export const createOrder = async (req, res) => {
+export const createOrder = asyncHandler(async (req, res) => {
   const { items } = req.body;
-  try {
-    const order = await prisma.order.create({
-      data: {
-        orderItems: {
-          create: items.map(itemId => ({ itemId, basePrice: 10 })), // Example pricing
-        },
-      },
-    });
-    res.status(201).json(order);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  const order = await orderFacade.createOrder(items);
+  res.status(201).json(order);
+});
 
 /**
  * @swagger
@@ -54,19 +43,7 @@ export const createOrder = async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-export const getOrders = async (req, res) => {
-  try {
-    const orders = await prisma.order.findMany({
-      include: {
-        orderItems: {
-          include: {
-            item: true,
-          },
-        },
-      },
-    });
-    res.status(200).json(orders);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+export const getOrders = asyncHandler(async (req, res) => {
+  const orders = await orderFacade.getOrders();
+  res.status(200).json(orders);
+});

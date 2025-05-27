@@ -1,6 +1,5 @@
-// src/controllers/categoryController.js
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { asyncHandler } from "../utils/asyncHandler.js";
+import * as facade from "../facade.js";
 
 /**
  * @swagger
@@ -12,14 +11,10 @@ const prisma = new PrismaClient();
  *       200:
  *         description: A list of categories
  */
-export const getCategories = async (req, res) => {
-  try {
-    const categories = await prisma.category.findMany();
-    res.status(200).json(categories);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+export const getCategories = asyncHandler(async (req, res) => {
+  const categories = await facade.getCategories();
+  res.status(200).json(categories);
+});
 
 /**
  * @swagger
@@ -43,14 +38,8 @@ export const getCategories = async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-export const createCategory = async (req, res) => {
+export const createCategory = asyncHandler(async (req, res) => {
   const { name } = req.body;
-  try {
-    const category = await prisma.category.create({
-      data: { name },
-    });
-    res.status(201).json(category);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  const category = await facade.createCategory({ name });
+  res.status(201).json(category);
+});
