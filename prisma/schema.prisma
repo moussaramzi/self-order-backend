@@ -25,6 +25,7 @@ model Item {
   id    Int     @id @default(autoincrement())
   name  String
   price Float
+  imageUrl String? 
   category   Category? @relation(fields: [categoryId], references: [id])
   categoryId Int?
   itemIngredients ItemIngredient[]
@@ -44,6 +45,7 @@ model Menu {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   price     Float
+  imageUrl   String?
   menuItems MenuItem[]
   orderItems OrderItem[]
 }

@@ -26,8 +26,8 @@ export const getMenus = async () => {
   return menuRepository.getMenus();
 };
 
-export const createMenu = async (name, price) => {
-  return menuRepository.createMenu({ name, price });
+export const createMenu = async (name, price, imageUrl) => {
+  return menuRepository.createMenu({ name, price, imageUrl });
 };
 
 //Items
@@ -40,8 +40,8 @@ export const getItemIngredients = async (itemId) => {
   return itemIngredients.map(ii => ii.ingredient);
 };
 
-export const createItem = async ({ name, price, categoryId, ingredients }) => {
-  return itemRepository.createItem({ name, price, categoryId, ingredients });
+export const createItem = async ({ name, price, categoryId, ingredients, imageUrl }) => {
+  return itemRepository.createItem({ name, price, categoryId, ingredients, imageUrl });
 };
 
 //ingredients
