@@ -20,12 +20,13 @@ export const getItemIngredients = async (itemId) => {
   });
 };
 
-export const createItem = async ({ name, price, categoryId, ingredients }) => {
+export const createItem = async ({ name, price, categoryId, ingredients, imageUrl }) => {
   const item = await prisma.item.create({
     data: {
       name,
       price,
       categoryId,
+      imageUrl,
       itemIngredients: {
         create: ingredients.map(ingredientId => ({
           ingredientId,

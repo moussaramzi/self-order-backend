@@ -6,6 +6,7 @@ import itemRoutes from "./routes/itemRoutes.js";
 import menuRoutes from "./routes/menuRoutes.js";    
 import ingredientRoutes from './routes/ingredientRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
+import uploadRoutes from "./routes/uploadRoutes.js";
 
 import { swaggerDocs, swaggerUi } from "./swagger.js";
 
@@ -16,8 +17,13 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
   }));
 // Middleware
-app.use(bodyParser.json());
-
+app.use((req, res, next) => {
+  if (req.is('application/json')) {
+    bodyParser.json()(req, res, next);
+  } else {
+    next();
+  }
+});
 // Routes
 app.use("/categories", categoryRoutes);
 app.use("/items", itemRoutes);

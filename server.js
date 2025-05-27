@@ -6,6 +6,7 @@ const app = express();
 // Middlewares
 app.use(cors());
 app.use(express.json());
+app.use('/uploads', express.static('public/uploads'));
 
 // Test route
 app.get('/', (req, res) => {

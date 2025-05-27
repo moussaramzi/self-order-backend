@@ -60,10 +60,10 @@ export const getItemIngredients = asyncHandler(async (req, res) => {
  *         description: Internal server error
  */
 export const createItem = asyncHandler(async (req, res) => {
-  const { name, price, categoryId, ingredients } = req.body;
+  const { name, price, categoryId, ingredients, imageUrl } = req.body;
   if (!ingredients || ingredients.length === 0) {
     return res.status(400).json({ error: "An item must have at least one ingredient." });
   }
-  const createdItem = await itemFacade.createItem({ name, price, categoryId, ingredients });
+  const createdItem = await itemFacade.createItem({ name, price, categoryId, ingredients, imageUrl });
   res.status(201).json(createdItem);
 });

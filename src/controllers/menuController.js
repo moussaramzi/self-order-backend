@@ -29,7 +29,7 @@ export const getMenus = asyncHandler(async (req, res) => {
  *         description: Internal server error
  */
 export const createMenu = asyncHandler(async (req, res) => {
-  const { name, price } = req.body;
-  const menu = await menuFacade.createMenu(name, price);
+  const { name, price, imageUrl } = req.body;
+  const menu = await menuFacade.createMenu(name, price, imageUrl);
   res.status(201).json(menu);
 });
