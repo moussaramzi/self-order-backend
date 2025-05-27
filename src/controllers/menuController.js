@@ -1,6 +1,5 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
-
+import * as menuFacade from "../facade.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 /**
  * @swagger
@@ -12,14 +11,10 @@ const prisma = new PrismaClient();
  *       200:
  *         description: A list of menus
  */
-export const getMenus = async (req, res) => {
-  try {
-    const menus = await prisma.menu.findMany();
-    res.status(200).json(menus);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+export const getMenus = asyncHandler(async (req, res) => {
+  const menus = await menuFacade.getMenus();
+  res.status(200).json(menus);
+});
 
 /**
  * @swagger
@@ -33,14 +28,8 @@ export const getMenus = async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-export const createMenu = async (req, res) => {
+export const createMenu = asyncHandler(async (req, res) => {
   const { name, price } = req.body;
-  try {
-    const menu = await prisma.menu.create({
-      data: { name, price },
-    });
-    res.status(201).json(menu);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  const menu = await menuFacade.createMenu(name, price);
+  res.status(201).json(menu);
+});

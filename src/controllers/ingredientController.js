@@ -1,6 +1,5 @@
-// src/controllers/ingredientController.js
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { asyncHandler } from "../utils/asyncHandler.js";
+import * as facade from "../facade.js";
 
 /**
  * @swagger
@@ -14,14 +13,10 @@ const prisma = new PrismaClient();
  *       500:
  *         description: Internal server error
  */
-export const getIngredients = async (req, res) => {
-  try {
-    const ingredients = await prisma.ingredient.findMany();
-    res.status(200).json(ingredients);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+export const getIngredients = asyncHandler(async (req, res) => {
+  const ingredients = await facade.getIngredients();
+  res.status(200).json(ingredients);
+});
 
 /**
  * @swagger
@@ -47,14 +42,8 @@ export const getIngredients = async (req, res) => {
  *       500:
  *         description: Internal server error
  */
-export const createIngredient = async (req, res) => {
+export const createIngredient = asyncHandler(async (req, res) => {
   const { name, price } = req.body;
-  try {
-    const ingredient = await prisma.ingredient.create({
-      data: { name, price },
-    });
-    res.status(201).json(ingredient);
-  } catch (error) {
-    res.status(500).json({ error: error.message });
-  }
-};
+  const ingredient = await facade.createIngredient({ name, price });
+  res.status(201).json(ingredient);
+});
